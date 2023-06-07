@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radiance</title>
+  <link rel="icon" href="./res/logo.PNG">
+  <!--  css-->
+  <script type="text/javascript" src="./Scripts/jquery/jquery.js"></script>
+  <link href="./Scripts/theboot/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="./Scripts/alertify/css/alertify.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="styles.css" rel="stylesheet" crossorigin="anonymous">
+  <!-- Bootstrap's bundle-->
+
+  <script type="text/javascript" src="./Scripts/theboot/js/bootstrap.bundle.min.js"></script>
+
+  <!--indispensable-->
+  <script type="text/javascript" src="./Scripts/alertify/alertify.js"></script>
+  <link rel="stylesheet" src="./Scripts/alertify/css/alertify.css" />
+
+
+  <!--so that we can use plantuml-->
+  <script type="text/javascript" src="./Scripts/jquery_plantuml.js"></script>
+
+  <!--So that we can use dropzone-->
+  <script type="text/javascript" src="./Scripts/filedrop/jQuery.FileDrop.js"></script>
+
+
+  <!--Our own scripts-->
+  <script type="text/javascript" src="./Scripts/schema_handler.js"></script>
+  <script type="text/javascript" src="./Scripts/cache_handler.js"></script>
+  <script type="text/javascript" src="./Scripts/builder_handler.js"></script>
+  <script type="text/javascript" src="./Scripts/collections_handler.js"></script>
+  <script type="text/javascript" src="./Scripts/interpreter_handler.js"></script>
+
+
+  <!--So that we can code properly-->
+  <script src="./Scripts/ace 2/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./Scripts/ace 2/ext-language_tools.js"></script>
+  <script src="./Scripts/leaderline/leader-line.min.js"></script>
+
+
+  <!--So we can draw the score-->
+  <script src="./Scripts/twojs.js"></script>
+
+
+  <!-- get the fonts needed for the ui-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!--The begining of the parent for all the elements in the page-->
+  <div class="container-fluid shadow-sm" style="font-family:'Lora'">
+    <!-- Row for the main menu-->
+    <div class="row">
+      <div class="col-2">
+        <img class='img-fluid' width="50%" src="./res/logohor.PNG" style="min-width: 140px;">
+      </div>
+      <div class="col-2">
+        <button class="menu_element_unselected" onclick="menuSelection('manager')" id="manager_button">
+          <h5>Manager</h5>
+
+        </button>
+
+      </div>
+      <div class="col-2">
+        <button class="menu_element_unselected" onclick="menuSelection('builder')" id="builder_button">
+          <h5>Profile Builder</h5>
+        </button>
+      </div>
+      <div class="col-2">
+        <button class="menu_element_unselected" onclick="menuSelection('collection_builder')"
+          id="collection_builder_button">
+          <h5>Collection Builder</h5>
+        </button>
+      </div>
+      <div class="col-2">
+        <button class="menu_element_unselected" onclick="menuSelection('interpreter')" id="interpreter_button">
+          <h5>Interpreter</h5>
+        </button>
+
+      </div>
+      <div class="col-2">
+        <div class="rule">
+          <div class="col-12 text-center">
+            <h5 style="font-size:smaller">Project size: <span id="mem_usage"></span><span>/5MB</span></h5>
+          </div>
+          <div class="col-12">
+            <div class="progress" style="margin-top:-5px;">
+              <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" id="memory_meter"></div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid rule" id="builder_view" style="display:hidden"><!--beginning of the builder view-->
+
+
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h3 id="currently_selected_profile" style=" padding-top: 10px;">No profile selected
+        </h3>
+      </div>
+
+      <div class="d-flex shadow-none flex-row mb-3 align-self-start">
+        <div class="p-2" style="background-color:transparent !important;">
+
+          <div class="row">
+            <div class="col-12">
+              <h6>Select your level of expertise below </h6>
+            </div>
+            <div class="col-6">
+              <select class="form-control" name="" id="builder_level_selection">
+                <option value="1">Beginner</option>
+                <option value="2">Intermediate</option>
+                <option value="3">Expert</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <img class="img-fluid" src="./res/edit.png" onclick="teachConfiguration(null)" style="max-width:20px;">
+            </div>
+          </div>
+
+        </div>
+
+        <div class="p-2 bd-highlight">
+          <button class="shadow-sm btn generic_button" onclick='$("#builder_element_selection_modal").modal("show");'>
+            Change profile
+          </button>
+        </div>
+
+
+        <div class="p-2 bd-highlight">
+          <button class="btn btn-outline-secondary" onclick="openNav()">Edit algorithm<img class="img-fluid"
+              src="./res/leaf.svg" style="max-width: 30px !important;"></button>
+        </div>
+        <div class="p-2 bd-highlight">
+          <button id='run_algorithm_button' class="btn btn-outline-secondary attention"
+            onclick="runBuilderAlgorithm()">Rate this profile<img class="img-fluid" src="./res/leaf.svg"
+              style="max-width: 30px !important;"></button>
+        </div>
+
+
+        <div class="p-2" style="background-color:transparent !important;">
+
+          <div class="row">
+            <div class="col-12">
+              <h6>Select a consumption guide </h6>
+            </div>
+            <div class="col-12">
+              <select class="form-control" onchange="changeGuide()" name="" id="consumption_guide_select">
+
+              </select>
+            </div>
+
+          </div>
+
+        </div>
+
+
+      </div><!--end of flex box-->
+
+    </div>
+    <div class="row" id="builder_algorithm_editor"
+      style="z-index: 100; position: relative;background-color:rgba(255,255,255,0.85); margin-top: 10px;">
+
+      <div class="col-12" id="algorithm_editor_content" style="display: none;">
+        <div class="row shadow-lg">
+
+          <div class="col-4" style="margin-bottom: 10px;">
+            <button class="btn btn-outline-secondary shadow-sm" style="width:100% !important;padding-bottom: 10px;"
+              onclick="saveToStorage('builder_algorithm')"><img class="img-fluid" src="./res/saveButton2.svg"
+                style="max-width: 30px !important;">Save algorithm</button>
+          </div>
+
+          <div class="col-4">
+            <button class="btn btn-outline-secondary shadow-sm" style="width:100% !important;padding-bottom:10px;"
+              onclick="runBuilderAlgorithm()"><img class="img-fluid" src="./res/play.svg"
+                style="max-width: 30px !important;">Run algorithm</button>
+          </div>
+
+          <div class="col-4">
+            <button class="btn btn-outline-secondary shadow-sm" style="width:100% !important;padding-bottom:10px;"
+              onclick="downloadAlgorithm('builder_algorithm')"><img class="img-fluid" src="./res/download.png"
+                style="max-width: 30px !important;">Download algorithm</button>
+          </div>
+
+          <div class="col-12">
+            <div id="builder_algorithm"
+              style="height: 100%; width: 100%;min-height:720px;min-width: 1000px; padding: top 10px;">
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="col-md-4 content_box" style="overflow:auto;">
+        <div class="row" style="width:95% !important;">
+          <div class="col-sm-12 content_box_title text-center">
+            Available parents
+          </div>
+          <div class="col-sm-12  text-center" style="overflow:auto;">
+            <div class="row" id="available_parents" style="width:95% !important;">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 content_box" id="available_children_area" style="overflow:auto;">
+        <div class="row">
+          <div class="col-sm-12 content_box_title text-center">
+            Available children
+          </div>
+          <div class="col-sm-12">
+            <div class="row" id="available_children"
+              style="padding-left:0px !important;padding-top:0px!important;padding-right:0px !important;padding-bottom:0px !important; margin-left:0px !important; margin-right:0px !important;">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 content_box" id="available_variables_area" style="overflow:auto;">
+        <div class="row">
+          <div class="col-sm-12 content_box_title text-center">
+            Available variables
+          </div>
+          <div class="col-sm-12">
+            <div class="row" id="available_children_variables">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!--end of the row for the variables, parents and children-->
+    <div class="row" style="margin-top:10px;"><!--beginning for the row that manages the sequence diagram-->
+      <div class="col-md-5 content_box" style="overflow: auto;">
+        <div class="row">
+          <div class="col-md-10 content_box_title text-center">
+            Profile sequencer
+          </div>
+
+
+          <div class="col-md-2">
+            <button class="shadow-sm generic_button" onclick="sequencerRulesReasoner()" style="width: 100%;"
+              data-toggle="tooltip" data-placement="bottom" title=""
+              data-bs-original-title="Use this button if the UI is not updated to the latest information.">
+              <img class="img-fluid" src="./res/refresh.svg" style="max-width: 30px; min-width: 10px; width: 100%;">
+            </button>
+          </div>
+          <div class="col-md-12">
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header content_box_option" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    Results<a class="instance_add" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip"
+                      data-placement="bottom" title="" data-bs-original-title="Add a new result sequence"
+                      onclick="createInstanceFromProfileElement('','available_children',20,23,false,false,'',null )"><strong>+</strong></a>
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body rule" style="overflow-y: auto;">
+                    <div class="row no-gutters" id="results_sequencer_rules">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header content_box_option" id="headingTwo">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Triggers<a class="instance_add" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip"
+                      data-placement="bottom" title="" data-bs-original-title="Add a new trigger sequence"
+                      onclick="createInstanceFromProfileElement('','available_children',20,22,false,false,'',null )"><strong>+</strong></a><a
+                      class="" style="margin-left:auto;margin-right:auto;" data-toggle="tooltip" data-placement="bottom"
+                      title="" data-bs-original-title="Manage external parameters"><img src="./res/external_trigger.png"
+                        class="img-fluid" style="max-width: 40px !important;" data-bs-toggle="modal"
+                        data-bs-target="#external_parameters_manager" onclick="externalTriggersPopulation(true)"></a>
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body rule" style="overflow-y: auto;">
+                    <div class="row no-gutters" id="triggers_sequencer_rules">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header content_box_option" id="headingThree">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Operational dependencies<a class="instance_add" style="margin-left:auto;margin-right:auto;"
+                      data-toggle="tooltip" data-placement="bottom" title=""
+                      data-bs-original-title="Add a new operational dependency"
+                      onclick="createInstanceFromProfileElement('','available_children',20,21,false,false,'',null )"><strong>+</strong></a>
+                  </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                  data-bs-parent="#accordionExample">
+                  <div class="accordion-body rule" style="overflow-y: auto;">
+                    <div class="row no-gutters" id="dependencies_sequencer_rules">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-12 content_box">
+            <!--this is the col for the uml description with plantuml-->
+            <div class="row">
+              <div class="col-md-10 content_box_title text-center">
+                Sequence diagram
+              </div>
+              <div class="col-sm-2">
+                <button onClick="window.open('./sequence_preview.html');" class="shadow-sm generic_button">
+                  pop-out
+                </button>
+              </div>
+              <div class="col-md-12" id="plantuml_builder_flow">
+
+              </div>
+
+            </div>
+          </div>
+          <div class="col-md-12 content_box">
+            <!--this is the col for the uml description with plantuml-->
+            <div class="row">
+              <div class="col-md-10 content_box_title text-center">
+                Step diagram
+              </div>
+              <div class="col-sm-2">
+                <button onClick="window.open('./timing_preview.html');" class="shadow-sm generic_button">
+                  pop-out
+                </button>
+              </div>
+              <div class="col-md-12" id="plantuml_builder_timing">
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+    </div>
+
+  </div><!--end of the container for the builder view-->
+  <div class="container-fluid rule" id="collection_builder_view" style="display:hidden">
+    <div class="row text-center">
+
+      <div class="col-12">
+        <h3 id="currently_selected_collection" style=" padding-top: 10px;">No collection selected
+        </h3>
+      </div>
+      <div class="col-12">
+        <button class="shadow-sm btn generic_button"
+          onclick="$('#collection_builder_selection_modal').modal('show');">Change profile</button>
+
+      </div>
+    </div>
+    <div class="row">
+      <!-- beginning of the first content box-->
+      <div class="col-md-3 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="col-sm-12 content_box_title text-center">
+            Available profiles
+          </div>
+        </div>
+
+        <!-- this content box should get populated with the available schemas-->
+        <div class="row content_list profile_assign text-center overflow-auto"
+          id="collections_builder_deassigned_profiles" data-content_type="profile-assign">
+        </div>
+
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;marfgin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="profile_assign_search_bar text-center" data-content_type="profile">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+
+        </div><!-- End of the content box options-->
+
+      </div><!-- End of the first content box-->
+
+      <!-- beginning of the first content box-->
+      <div class="col-md-3 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="col-sm-12 content_box_title text-center">
+            Profiles in collection
+          </div>
+        </div>
+
+        <!-- this content box should get populated with the available schemas-->
+        <div class="row content_list profile_deassign text-center overflow-auto"
+          id="collections_builder_assigned_profiles" data-content_type="profile-deassign">
+        </div>
+
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="profile_assign_search_bar text-center" data-content_type="profile-deassign">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+
+
+        </div><!-- End of the content box options-->
+
+
+      </div><!-- End of the first content box-->
+
+
+    </div>
+    <!--collections assign and deassign-->
+    <div class="row">
+      <!-- beginning of the first content box-->
+      <div class="col-md-3 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="col-sm-12 content_box_title text-center">
+            Available collections
+          </div>
+        </div>
+
+        <!-- this content box should get populated with the available schemas-->
+        <div class="row content_box collection_assign text-center overflow-auto"
+          id="collections_builder_deassigned_collections" data-content_type="collection-assign">
+        </div>
+
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="assign_search_bar text-center" data-content_type="collection_assign">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+
+
+        </div><!-- End of the content box options-->
+
+
+      </div><!-- End of the first content box-->
+
+
+
+
+
+      <!-- beginning of the first content box-->
+      <div class="col-md-3 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="col-sm-12 content_box_title text-center">
+            Assigned collections
+          </div>
+        </div>
+
+        <!-- this content box should get populated with the available schemas-->
+        <div class="row content_box collection_deassign text-center overflow-auto"
+          id="collections_builder_assigned_collections" data-content_type="collection_deassign">
+        </div>
+
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="assign_search_bar text-center" data-content_type="collection_deassign">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+
+
+        </div><!-- End of the content box options-->
+
+
+      </div><!-- End of the first content box-->
+
+      <!-- beginning of the first content box-->
+      <div class="col-md-3 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="row">
+
+            <div class="col-sm-11 content_box_title text-center">
+              Parameter pool
+            </div>
+            <div class="col-sm-1 align-self-start">
+              <a class="help" data-toggle="tooltip" data-placement="bottom"
+                title="This is a list of all the parameters inside of the profiles and collections in this collection whose direction is set to external. These parameters can be used as triggers among the profiles that are members of this collection. If you don't see a parameter here, you need to set its direction to external in the profile builder of its corresponding profile. Otherwise, check that the profile configuration is not set to exclusive.">?</a>
+            </div>
+          </div>
+
+
+        </div>
+
+        <!-- this content box should get populated with the available schemas-->
+        <div class="row content_box parameter_pool text-center overflow-auto" id="parameter_pool"
+          data-content_type="collection_deassign">
+        </div>
+
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="assign_search_bar text-center" data-content_type="parameter_pool">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+
+
+        </div><!-- End of the content box options-->
+
+
+      </div><!-- End of the first content box-->
+
+      <div class="col-md-3 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="row">
+
+            <div class="col-sm-11 content_box_title text-center" style="font-size: large !important;;">
+              Collection Inheritance tree
+
+            </div>
+            <div class="col-sm-1 align-self-start">
+              <a class="help" data-toggle="tooltip" data-placement="bottom"
+                title="This is a list of all the parameters inside of the profiles and collections in this collection whose direction is set to external. These parameters can be used as triggers among the profiles that are members of this collection. If you don't see a parameter here, you need to set its direction to external in the profile builder of its corresponding profile. Otherwise, check that the profile configuration is not set to exclusive.">?</a>
+            </div>
+          </div>
+
+
+        </div>
+
+        <!-- this content box should get populated with the available parameters in the collection-->
+        <div class="row content_box parameter_pool text-center overflow-auto" id="inheritance_tree"
+          data-content_type="collection_deassign">
+          <!--lets add a maximum of 4 columns-->
+          <div class="col-md-3">
+            <div class="row rule" id="inheritance_tree_branch_1">
+
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row rule" id="inheritance_tree_branch_2">
+
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row rule" id="inheritance_tree_branch_3">
+
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="row rule" id="inheritance_tree_branch_4">
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="assign_search_bar text-center" data-content_type="parameter_pool">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+
+
+        </div><!-- End of the content box options-->
+
+
+      </div><!-- End of the first content box-->
+
+
+    </div>
+
+
+
+  </div>
+
+
+
+
+
+
+  <div class="container-fluid" id="interpreter_view" style="display:hidden">
+
+  </div>
+
+  <div class="container-fluid" id="manager_view" style="display:hidden">
+    <!--The toolbar-->
+    <div class="row" style="margin-top:20px;">
+      <div class="col-2">
+        <button class="shadow-sm btn generic_button" onclick="downloadDatabase()">Download
+          project</button>
+
+      </div>
+      <div class="col-2">
+        <button class="shadow-sm btn generic_button" onclick="$('#load_library_modal').modal('show');">Replace
+          project</button>
+      </div>
+      <div class="col-6">
+
+      </div>
+      <div class="col-2 align-self-end">
+        <button class="btn btn-secondary generic_negative_button" onclick="deleteLocalStorage()"
+          style="margin-top: 10px;">Delete project</button>
+      </div>
+
+    </div>
+    <!--End of the toolbar-->
+    <div class="row justify-content-center" id="content_boxes_area">
+
+      <!-- beginning of the first content box-->
+      <div class="col-md-4 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="col-sm-12 content_box_title text-center">
+            Available Schemas
+          </div>
+        </div>
+
+        <!-- this content box should get populated with the available schemas-->
+        <div class="row content_box text-center overflow-auto" id="manager_schema_elements" data-content_type="schema">
+        </div>
+
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="box_search_bar text-center" data-content_type="schema">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+          <div class="col-sm-4 text-center content_box_option" onclick="downloadLibrary('schema')">
+            Download <br>Library
+          </div>
+          <div class="col-sm-4 text-center content_box_option align-items-center justify-content-center">
+            <a class="instance_add"
+              style="margin-left:auto;margin-right:auto;width: 45px;height: 45px; font-size: xx-large;"
+              data-toggle="tooltip" data-placement="bottom" title="" data-bs-original-title="Add a new schema"
+              onclick="" data-bs-toggle="modal" data-bs-target="#load_schema_modal"><strong>+</strong></a>
+
+          </div>
+          <div class="col-sm-4 text-center content_box_option" data-bs-toggle="modal"
+            data-bs-target="#load_library_modal" style="">
+            Load to<br>Library
+          </div>
+        </div><!-- End of the content box options-->
+
+
+      </div><!-- End of the first content box-->
+
+
+      <!-- beginning of the second content box-->
+      <div class="col-md-4 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="col-sm-12 content_box_title text-center">
+            Available Collections
+          </div>
+        </div>
+        <!-- this box gets populated with collections -->
+        <div class="row content_box" id="manager_collection_elements" data-content_type="collection">
+        </div>
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="box_search_bar text-center" data-content_type="collection">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+          <div class="col-sm-4 text-center content_box_option" onclick="downloadLibrary('collection')">
+            Download <br>Library
+          </div>
+          <div class="col-sm-4 text-center content_box_option align-items-center justify-content-center">
+            <a class="instance_add"
+              style="margin-left:auto;margin-right:auto;width: 45px;height: 45px; font-size: xx-large;"
+              data-toggle="tooltip" data-placement="bottom" title=""
+              onclick="instanceCollection()"><strong>+</strong></a>
+
+          </div>
+          <div class="col-sm-4 text-center content_box_option" data-bs-toggle="modal"
+            data-bs-target="#load_library_modal" style="">
+            Load to<br>Library
+          </div>
+        </div><!-- End of the content box options-->
+
+
+      </div><!-- End of the second content box-->
+
+      <!--Beginning of the third content box -->
+      <div class="col-md-4 ">
+        <!--Just a title -->
+        <div class="row text-center">
+          <div class="col-sm-12 content_box_title text-center">
+            Available Profiles
+          </div>
+        </div>
+        <!--this box gets populated with collections-->
+        <div class="row content_box overflow-auto" id="manager_profile_elements" data-content_type="profile">
+        </div>
+        <!-- Options for the content box above-->
+        <div class="row border">
+          <!--search bar-->
+          <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+            <div class="row text-center">
+              <div class="col-11">
+                <input class="box_search_bar text-center" data-content_type="profile">
+              </div>
+              <div class="col-1">
+                <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+              </div>
+            </div>
+          </div><!--end of search bar-->
+          <div class="col-sm-4 text-center content_box_option" onclick="downloadLibrary('profile')">
+            Download <br>Library
+          </div>
+          <div class="col-sm-4 text-center content_box_option align-items-center justify-content-center">
+            <a class="instance_add"
+              style="margin-left:auto;margin-right:auto;width: 45px;height: 45px; font-size: xx-large;"
+              data-toggle="tooltip" data-placement="bottom" title="" data-bs-original-title="Instance a schema"
+              onclick="" data-bs-toggle="modal" data-bs-target="#schema_selection_modal"><strong>+</strong></a>
+
+          </div>
+          <div class="col-sm-4 text-center content_box_option" data-bs-toggle="modal"
+            data-bs-target="#load_library_modal" style="">
+            Load to<br>Library
+          </div>
+        </div><!-- End of the content box options-->
+      </div><!-- End of the third content box-->
+
+
+      <!-- end of the content boxes area-->
+    </div>
+
+    <!-- end of the manager view-->
+  </div>
+
+  <!--Add a schema Modal -->
+  <div class="modal fade" id="load_schema_modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Schema</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="mb-3">
+              <label for="" class="form-label"></label>
+              <textarea class="form-control" name="" id="schema_load_field" aria-describedby="helpId"
+                placeholder=""> </textarea>
+              <small id="helpId" class="form-text text-muted">Copy and paste your JSON data here. Keys must not repeat
+                and they can not have spaces: "element id" -> "element_id"</small>
+            </div>
+            <div class="mb-3">
+              <label for="" class="form-label"></label>
+              <input class="form-control" name="" id="schema_name_field" aria-describedby="helpId" placeholder="">
+
+              <small id="helpId" class="form-text text-muted">Name for the schema</small>
+            </div>
+            <div class="mb-3">
+              <input class="form-check-input" type="checkbox" value="" id="the_schema_is_guide">
+              <label class="form-check-label" for="flexCheckChecked">
+                Check the box if the schema is a consumption guide
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button"
+            data-bs-dismiss="modal">Cancel</button>
+          <button id="load_schema_button" type="button" class="btn btn-primary generic_button"
+            onclick="loadSchema()">Load Schema</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of modal to add a schema -->
+
+
+  <!--Load to library modal -->
+  <div class="modal fade" id="load_library_modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add to library</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="mb-3">
+
+            </div>
+
+            <div class="mb-3">
+              <small id="helpId" class="form-text text-muted">1- Select a library to load the files to</small>
+              <select class="form-select" name="" id="library_loader_selection">
+                <option value="schema">Schemas</option>
+                <option value="collection">Collections</option>
+                <option value="profile">Profiles</option>
+                <option value="db">Complete database</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <div class="row" id="files_drop">
+                <small id="helpId" class="form-text text-muted">2- Drop the files</small>
+                <div class="col-12 rule" align="center"
+                  style="border: 2.22px dashed #000000 !important;height: 100px!important;">
+                  <h5>Drop your files here</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button"
+            data-bs-dismiss="modal">Cancel</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of load to library schema -->
+
+  <!--raw edit an element-->
+  <div class="modal fade" id="raw_edit_modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit element</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="mb-3">
+
+              <div class="mb-3">
+                <div class="mb-3">
+                  <label for="" class="form-label"></label>
+                  <textarea class="form-control" name="" id="raw_text_field" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="" class="form-label">New name:</label>
+                  <input class="form-control" name="" id="raw_name" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                  <input class="form-check-input" type="checkbox" value="" id="the_modified_schema_is_guide">
+                  <label class="form-check-label" for="flexCheckChecked">
+                    Check the box if the schema is a consumption guide
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn generic_button" data-bs-dismiss="modal"
+              onclick="menuSelection('builder')">Or... Go to builder</button>
+            <button type="button" class="btn btn-secondary generic_negative_button"
+              data-bs-dismiss="modal">Cancel</button>
+            <button id="save_raw_edit_button" type="button" class="btn btn-primary generic_button"
+              onclick="saveRawEdit()">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of raw edit element -->
+
+  <!--start of editing an instance-->
+  <div class="modal fade" id="raw_edit_instance_modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Editing <strong>instance's metadata</strong></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="mb-3">
+
+              <div class="mb-3">
+                <div class="mb-3">
+                  <label for="" class="form-label">New name:</label>
+                  <input class="form-control" name="" id="raw_instance_name" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary generic_negative_button"
+              data-bs-dismiss="modal">Cancel</button>
+            <div id="save_instance_edition_button_place">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of editing an instance-->
+
+  <!-- Beginning of the schema selection modal (to instance a schema) -->
+  <div class="modal fade" id="schema_selection_modal" tabindex="-2" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select a schema to instance</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- beginning of the first content box-->
+          <div class="col-md-12 ">
+            <!--Just a title -->
+
+
+            <!-- this content box should get populated with the available schemas-->
+            <div class="row content_list text-center overflow-auto" id="manager_schema_elements"
+              data-content_type="schema">
+            </div>
+
+            <!-- Options for the content box above-->
+            <div class="row border">
+              <!--search bar-->
+              <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+                <div class="row text-center">
+                  <div class="col-11">
+                    <input class="list_search_bar text-center" data-content_type="schema">
+                  </div>
+                  <div class="col-1">
+                    <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- End of the content box options-->
+
+
+          </div><!-- End of the first content box-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button"
+            data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of the schema selection modal (for instancing a schema)-->
+
+  <!--beginning  of the element selection to initialize the builder with-->
+
+  <div class="modal fade" id="builder_element_selection_modal" tabindex="-2" role="dialog"
+    aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select an element to build</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+
+
+            <!-- beginning of the secohd content box-->
+            <div class="col-sm-12 ">
+              <!--Just a title -->
+              <div class="col-12 content_box_title text-center">
+                Available profiles
+              </div>
+
+              <!-- this content box should get populated with the available schemas-->
+              <div class="row content_list text-center overflow-auto" id="manager_schema_elements"
+                data-content_type="profile">
+              </div>
+
+              <!-- Options for the content box above-->
+              <div class="row border">
+                <!--search bar-->
+                <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+                  <div class="row text-center">
+                    <div class="col-11">
+                      <input class="list_search_bar text-center" data-content_type="profile">
+                    </div>
+                    <div class="col-1">
+                      <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+                    </div>
+                  </div>
+                </div>
+
+              </div><!-- End of the content box options-->
+
+
+            </div><!-- End of the second content box (for profiles)-->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button"
+            data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of the element selection to initializue the builder with-->
+  <!--Beginning of the collection selection model for the collection builder-->
+
+  <div class="modal fade" id="collection_builder_selection_modal" tabindex="-2" role="dialog"
+    aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select a collection to build</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+
+
+            <!-- beginning of the secohd content box-->
+            <div class="col-sm-12 ">
+              <!--Just a title -->
+              <div class="col-12 content_box_title text-center">
+                Available collections
+              </div>
+
+              <!-- this content box should get populated with the available schemas-->
+              <div class="row content_list text-center overflow-auto" id="manager_schema_elements"
+                data-content_type="collection">
+              </div>
+
+              <!-- Options for the content box above-->
+              <div class="row border">
+                <!--search bar-->
+                <div class="col-12" style="margin-bottom:10px;margin-top:10px;">
+                  <div class="row text-center">
+                    <div class="col-11">
+                      <input class="list_search_bar text-center" data-content_type="collection">
+                    </div>
+                    <div class="col-1">
+                      <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+                    </div>
+                  </div>
+                </div>
+
+              </div><!-- End of the content box options-->
+
+
+            </div><!-- End of the second content box (for profiles)-->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button"
+            data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--End of the collection selection modql for the collection builder-->
+  <!--beginning of the modal that teaches the tool the configurations of a profile-->
+
+  <div class="modal fade" id="teaching_modal" tabindex="-2" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Learning configuration </h5><br>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row"
+            style="position: sticky;top: 10px;z-index: 10000; background-color: rgba(255, 255, 255, 0.85);">
+            <div class="col-12">
+              <h5><strong>Configuration toolbox:</strong></h5>
+            </div>
+            <div class="col-2 " style="padding-bottom: 10px;padding-top: 10px;  ">
+              <button class="shadow-sm generic_button" onclick="downloadLibrary('builder_config')">Download
+                configuration</button>
+            </div>
+            <div class="col-2" style="padding-bottom: 10px;padding-top: 10px; ">
+              <button class="shadow-sm generic_button" onclick="readVariablesConfigurationFromUi()">Save
+                configuration</button>
+            </div>
+            <div class="col-2" style="padding-bottom: 10px;padding-top: 10px; ">
+              <button class="shadow-sm generic_button"
+                onclick="$('#configuration_cloner').modal('show');populateConfigurationCloner();">Copy
+                from another profile</button>
+            </div>
+
+          </div>
+          <div class="row ">
+            <div class="col-12">
+              <h5><strong>Select a variable to begin:</strong></h5>
+            </div>
+            <div class="row teacher_variables_container " id="teacher_variables">
+              <div class="accordion" id="teacher_accordion">
+
+              </div>
+            </div>
+
+            <div class="row teacher_categories_container " id="teacher_variables">
+              <h5><strong>Customize a category:</strong></h5>
+              <div class="accordion" id="teacher_accordion_categories">
+
+              </div>
+            </div>
+
+
+            <div class="row ">
+              <div class="col-12 text-center">
+                <button class="btn generic_button" onclick="readVariablesConfigurationFromUi()"
+                  style="text-decoration:underline;"><strong>Save this level's configuration</strong></button>
+              </div>
+            </div>
+            <div class="row" id="teacher_content" style="margin-top: 20px">
+
+            </div>
+
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button" data-bs-dismiss="modal"
+            onclick="cancelLevelConfiguration()">Cancel</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of the modal used to teach the tool a configuration-->
+
+
+  <!--Modal to assign external parameters as triggers-->
+
+
+
+  <!--beginning  of the element selection to initialize the builder with-->
+
+  <div class="modal fade" id="configuration_cloner" tabindex="-2" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Select an configuration to clone</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <!-- beginning of the secohd content box-->
+            <div class="col-sm-12 ">
+
+              <div class="col-12">
+                <span class="placeholder col-3 placeholder-lg ">1- Select the profile to clone the configuration
+                  from</span>
+                <select class="form-select" id="configuration_cloner_profile_select">
+
+                </select>
+              </div>
+
+              <div class="col-12">
+                <span class="placeholder col-3 placeholder-lg ">2- Select the configuration level to copy</span>
+                <select class="form-select" id="configuration_cloner_level_select">
+
+                  <option value="1">Beginner</option>
+                  <option value="2">Intermediate</option>
+                  <option value="3">Expert</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <span class="placeholder col-3 placeholder-lg ">3- Click on the bottom below</span><br>
+                <button type="button" class="btn btn-primary generic_button" data-bs-dismiss="modal"
+                  style="background-color:lightgreen;" onclick="cloneConfigurationFromTarget()">Clone level(s)</button>
+              </div>
+
+            </div><!-- End of the second content box (for profiles)-->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button"
+            data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary generic_button" data-bs-dismiss="modal"
+            onclick="cloneConfigurationFromTarget()">Clone level(s)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of the element selection to initializue the builder with-->
+
+
+
+  <!--beginning  of the element selection to initialize the builder with-->
+
+  <div class="modal fade" id="external_parameters_manager" tabindex="-2" role="dialog" aria-labelledby="modelTitleId"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 90%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">External triggers manager</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-12">
+              <span class="placeholder col-3 placeholder-lg ">1- Select a collection</span>
+              <select class="form-select" id="external_triggers_collections"
+                onchange="externalTriggersPopulation(false)" >
+
+              </select>
+            </div>
+
+            <div class="col-12">
+              <span class="placeholder col-3 placeholder-lg ">2- Select a profile from the collection</span>
+              <select class="form-select" id="external_triggers_profiles"
+                onchange="externalTriggersPopulation(false,true)">
+
+              </select>
+            </div>
+
+            <div class="col-12">
+              <span class="placeholder col-3 placeholder-lg ">3- Add and edit triggers:</span>
+              <div class="row rule">
+                <div class="col-12 content_box rule" style="padding-top:0px!important;">
+                  <div  class="row rule">
+                    <div class="col-12 text-center" style="background-color:linen;"><button class="generic_button
+                               " onclick="addExternalTrigger()">Add a trigger
+                      </button>
+                    </div>
+                  
+                  <div class="col-12">
+                    <div class="row rule" id="external_triggers_container" style="overflow: auto;
+                    max-height: 400px;">
+  
+                    </div>
+                  </div>
+
+
+            
+          
+
+
+                  </div>
+                </div>
+              
+
+              </div>
+              <div class="row text-center">
+               <!--  <div class="col-11">
+                  <input class="box_search_bar text-center" id="external_triggers_filter">
+                </div>
+                <div class="col-1">
+                  <img src="res/search_icon.png" class="img-fluid" alt="" width="25px">
+                </div> -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary generic_negative_button"
+            data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--end of the element selection to initializue the builder with-->
+
+  <!--The end for the parent for all the elements in the page-->
+  <script type="text/javascript" src="./Scripts/ui_handler.js"></script>
+
+</body>
+
+
+</html>

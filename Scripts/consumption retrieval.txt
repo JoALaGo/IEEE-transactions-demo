@@ -1,0 +1,44 @@
+//we first get the instance of the taxonomical consumption
+
+let taxonomical_guide = JSON.parse(db.profile_Array[1].profile_cache);
+
+//now fetch the stored category, type and platform
+let selected_category = this.available_parents[0][1].software_category;
+let selected_type = this.available_parents[0][1].software_type;
+let selected_platform = this.available_parents[0][1].hardware_platform;
+
+
+//fetch the available values for the current field
+let found_options;
+ if(type ==''){
+    let consumption_guide_per_category = 3;
+    let instances_available = 4;
+    let cpu_variables=1;
+    //the platform is in the position 3 of the taxonomical guide
+    for(let x in taxonomical_guide[consumption_guide_per_category][instances_available]){
+        if(taxonomical_guide[consumption_guide_per_category][instances_available][x].parent_instance_id == selected_category && taxonomical_guide[consumption_guide_per_category][instances_available][x].inner_id == selected_platform){
+            //we get the index of the platform we have chosen
+            //we get the inner values of the instance
+            let inner_variables = taxonomical_guide[consumption_guide_per_category][instances_available][x].inner_variables[cpu_variables].variables;
+            //now get the low medium and high
+            found_options = {'low':inner_variables.low,'medium':inner_variables.medium,'high':inner_variables.high};
+        }
+    }
+ }else{
+    //the platform is in the position 9 of the taxonomical guide
+    let consumption_guide_per_category = 9;
+    let instances_available = 4;
+    let cpu_variables=1;
+    //the platform is in the position 3 of the taxonomical guide
+    for(let x in taxonomical_guide[consumption_guide_per_category][instances_available]){
+        if(taxonomical_guide[consumption_guide_per_category][instances_available][x].parent_instance_id == selected_category && taxonomical_guide[consumption_guide_per_category][instances_available][x].inner_id == selected_platform){
+            //we get the index of the platform we have chosen
+            //we get the inner values of the instance
+            let inner_variables = taxonomical_guide[consumption_guide_per_category][instances_available][x].inner_variables[cpu_variables].variables;
+            //now get the low medium and high
+            found_options = {'low':inner_variables.low,'medium':inner_variables.medium,'high':inner_variables.high};
+        }
+    }
+ }
+
+ //we populate the options of the selector now

@@ -1,0 +1,1 @@
+In this version, collections now hold relationships among profiles with triggers.

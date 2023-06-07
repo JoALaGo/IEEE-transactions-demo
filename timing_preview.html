@@ -1,0 +1,15 @@
+<html>
+<head>
+    <script type="text/javascript" src="./Scripts/jquery/jquery.js"></script>
+    <script type="text/javascript" src="./Scripts/jquery_plantuml.js"></script>
+</head>
+<body>
+    <script>
+        let db = JSON.parse(this.localStorage.db);
+        document.body.innerHTML+="<img uml='"+db.timing_diagram.split("'").join('"')+"'>";
+        console.log("plantuml diagram parsed: \n"+db.timing_diagram);
+    </script>
+</body>
+</html>
+
+
