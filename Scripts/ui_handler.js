@@ -232,9 +232,9 @@ function loadSample(){
     updateLocalStorage(); 
     setBuilderSelection('profile',1216056141921);
     menuSelection('builder');
-    runBuilderAlgorithm();
     populateChildren('15',null,null,true,true);
-    runBuilderAlgorithm();
+    setTimeout(() => { runBuilderAlgorithm(); }, 3000);
+    
 }
 function restartTooltips() {
     $('[data-toggle="tooltip"]').tooltip({
