@@ -233,6 +233,7 @@ function loadSample(){
     setBuilderSelection('profile',1216056141921);
     menuSelection('builder');
     runBuilderAlgorithm();
+    populateChildren('19',null,null,true,true);
 }
 function restartTooltips() {
     $('[data-toggle="tooltip"]').tooltip({
