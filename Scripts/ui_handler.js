@@ -217,8 +217,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     checkMemoryUsage();
 
-    alertify.prompt( 'Load sample', 'Would you like to load the Discord sample project?', 'Yes, load it'
-               , function(evt, value) { this.db = JSON.parse(atob(document.getElementById('test_profile_back').innerHTML)); updateLocalStorage(); }
+    alertify.prompt( 'Load sample', 'Would you like to load the Discord sample project?',  function(evt) { this.db = JSON.parse(atob(document.getElementById('test_profile_back').innerHTML)); updateLocalStorage(); }
                , function() { alertify.error('Cancel') });
 
 
