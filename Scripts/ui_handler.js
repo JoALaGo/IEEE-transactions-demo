@@ -230,6 +230,7 @@ function loadSample(){
     let project =atob(document.getElementById('test_profile_back').innerHTML);
     this.db = JSON.parse(project); 
     updateLocalStorage(); 
+    setBuilderSelection('profile',1216056141921);
 }
 function restartTooltips() {
     $('[data-toggle="tooltip"]').tooltip({
