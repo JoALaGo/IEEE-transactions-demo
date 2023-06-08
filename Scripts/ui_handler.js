@@ -232,8 +232,8 @@ function loadSample(){
     updateLocalStorage(); 
     setBuilderSelection('profile',1216056141921);
     menuSelection('builder');
-    populateChildren('15',null,null,true,true);
     runBuilderAlgorithm();
+    populateChildren('15',null,null,true,true);
 }
 function restartTooltips() {
     $('[data-toggle="tooltip"]').tooltip({
