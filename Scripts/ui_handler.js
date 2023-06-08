@@ -218,9 +218,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     checkMemoryUsage();
 
     alertify.confirm('Load sample project', 'Would you like to load the Discord sample project?', function(){
-        let project =atob(document.getElementById('test_profile_back').innerHTML);
-         this.db = JSON.parse(project); 
-         updateLocalStorage();  
+        loadSample();
         }
     , function(){ alertify.error('Sample project load cancelled')});
 
@@ -228,7 +226,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
 });
 
-
+function loadSample(){
+    let project =atob(document.getElementById('test_profile_back').innerHTML);
+    this.db = JSON.parse(project); 
+    updateLocalStorage(); 
+}
 function restartTooltips() {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover'
