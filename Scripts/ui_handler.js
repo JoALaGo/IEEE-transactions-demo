@@ -234,6 +234,7 @@ function loadSample(){
     menuSelection('builder');
     runBuilderAlgorithm();
     populateChildren('15',null,null,true,true);
+    runBuilderAlgorithm();
 }
 function restartTooltips() {
     $('[data-toggle="tooltip"]').tooltip({
