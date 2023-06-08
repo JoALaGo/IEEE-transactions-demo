@@ -231,6 +231,7 @@ function loadSample(){
     this.db = JSON.parse(project); 
     updateLocalStorage(); 
     setBuilderSelection('profile',1216056141921);
+    menuSelection('builder');
     runBuilderAlgorithm();
 }
 function restartTooltips() {
