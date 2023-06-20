@@ -9,14 +9,18 @@
   right: 0;
   bottom: 0;
   background-color: black;
-  opacity: 0.4; }
+  opacity: 0.4;
+  z-index: 3;
+ }
 
 .tutorial-wrapper {
   position: absolute;
   transform-style: preserve-3d;
   transform-origin: 0 0;
   transition: transform 400ms ease;
-  will-change: transform; }
+  will-change: transform;
+  z-index: 3;
+ }
   .tutorial-wrapper.skip-animation {
     transition: none; }
     .tutorial-wrapper.skip-animation > .tutorial-background {

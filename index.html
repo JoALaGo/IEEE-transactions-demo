@@ -12,7 +12,7 @@
   <link href="./Scripts/theboot/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
   <link href="./Scripts/alertify/css/alertify.css" rel="stylesheet" crossorigin="anonymous">
   <link href="styles.css" rel="stylesheet" crossorigin="anonymous">
-  <link rel="stylesheet" href="./Scripts/tutorialjs/tutorial.css" />
+  
   <!-- Bootstrap's bundle-->
 
   <script type="text/javascript" src="./Scripts/theboot/js/bootstrap.bundle.min.js"></script>
@@ -45,8 +45,8 @@
 
   <!--So we can draw the score-->
   <script src="./Scripts/twojs.js"></script>
-  <script src="./Scripts/tutorialjs/tutorial.js"></script>
-
+  <link rel="stylesheet" href="./Scripts/tutorialjs/tutorial.css" />
+<script type="text/javascript" src="./Scripts/tutorialjs/tutorial.js"></script>
 
   <!-- get the fonts needed for the ui-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,7 +62,7 @@
     <!-- Row for the main menu-->
     <div class="row">
       <div class="col-2">
-        <img class='img-fluid' width="50%" src="./res/logohor.png" style="min-width: 140px;">
+        <img class='img-fluid' width="50%" src="./res/logohor.png" style="min-width: 140px;"id="rad_logo">
       </div>
       <div class="col-2">
         <button class="menu_element_unselected" onclick="menuSelection('manager')" id="manager_button">
@@ -135,7 +135,7 @@
         </div>
 
         <div class="p-2 bd-highlight">
-          <button class="shadow-sm btn generic_button" onclick='$("#builder_element_selection_modal").modal("show");'>
+          <button class="shadow-sm btn generic_button" onclick='$("#builder_element_selection_modal").modal("show");' id="change_prof">
             Change profile
           </button>
         </div>
