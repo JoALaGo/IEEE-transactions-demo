@@ -142,7 +142,7 @@
 
 
         <div class="p-2 bd-highlight">
-          <button class="btn btn-outline-secondary" onclick="openNav()">Edit algorithm<img class="img-fluid"
+          <button class="btn btn-outline-secondary" id="view_algo_button" onclick="openNav()">Edit algorithm<img class="img-fluid"
               src="./res/leaf.svg" style="max-width: 30px !important;"></button>
         </div>
         <div class="p-2 bd-highlight">
@@ -246,7 +246,7 @@
       </div>
     </div><!--end of the row for the variables, parents and children-->
     <div class="row" style="margin-top:10px;"><!--beginning for the row that manages the sequence diagram-->
-      <div class="col-md-5 content_box" style="overflow: auto;">
+      <div class="col-md-5 content_box" id="sequencer_view"style="overflow: auto;">
         <div class="row">
           <div class="col-md-10 content_box_title text-center">
             Profile sequencer
@@ -347,7 +347,7 @@
 
             </div>
           </div>
-          <div class="col-md-12 content_box">
+          <div class="col-md-12 content_box"id="step_diagram_view">
             <!--this is the col for the uml description with plantuml-->
             <div class="row">
               <div class="col-md-10 content_box_title text-center">
